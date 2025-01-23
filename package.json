@@ -1,0 +1,21 @@
+{
+  "name": "totp",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon --ignore './data.json' index.js",
+    "seed":"node prisma/seed.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "otplib": "^12.0.1",
+    "prisma": "^6.2.1",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
+  }
+}
