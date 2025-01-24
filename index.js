@@ -47,14 +47,15 @@ app.post("/register-totp", async (req, res) => {
         secret:qrResult.secret
     }});
     req.session.email = email;
-    return res.status(200).redirect(`/register-totp?filePath=${qrResult.filePath}`);
+   //  https://medipapel-sandbox-bucket.s3.ap-southeast-2.amazonaws.com/qrcodes/1737704763331qrcode.png
+    const fullUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/qrcodes/${qrResult.fileName}`;
+
+    return res.status(200).redirect(`/register-totp?filePath=${fullUrl}`);
 });
 
 app.post("/verify",async (req,res)=>{
     const email = req.session.email;
     const {otp} = req.body;
-    console.log(email,otp);
-    
    if(!otp ) return res.status(400).send("Otp is required");
    const user = await prisma.user.findUnique({
       where: {
@@ -67,8 +68,21 @@ app.post("/verify",async (req,res)=>{
    
    if(!verificationResult)  return res.status(401).send("unautharized");
    
-   res.status(200).send("USer login sucecss");
-})
+   res.status(200).render("dashboard",{username:user.name});
+});
+
+app.post("/logout", async(req, res) => {
+   await prisma.user.update({
+      where: {
+         email: req.session.email
+      },
+      data: {
+         secret: null
+      }
+   });
+   req.session.email = null;
+   res.redirect("/");
+});
 
 app.get("/", async(req, res) => {
    const users = await prisma.user.findMany();
@@ -77,7 +91,7 @@ app.get("/", async(req, res) => {
 
 app.get("/register-totp", (req, res) => {
    const { filePath } = req.query;
-   res.render('register-totp', { filePath,host:`http://localhost:${port}/` });
+   res.render('register-totp', { filePath});
 });
 
 app.listen(port, () => console.log(`Server started on port ${port}`))

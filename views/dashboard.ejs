@@ -12,13 +12,11 @@
 </head>
 <body>
     <div>
-        <h3>Scan QR code with authendicator app and enter OTP</h3>
-        <img src="<%=filePath %>">
+        <h3>Welcome <%= username %></h3>
     </div>
 
-    <form action="/verify" method="post">
-      <input type="text" name="otp" placeholder="Enter Otp" required>
-      <button type="submit">Verify User</button>
+    <form action="/logout" method="post">
+      <button type="submit">Logout</button>
     </form>
 
 </body>

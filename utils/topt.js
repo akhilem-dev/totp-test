@@ -3,22 +3,22 @@ const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 const path = require("path");
 const fs = require("fs");
+const { uploadFileToS3 } = require('./s3');
 const qrFolderPath = "./qr"
 async function generateAndSaveQRCode(username) {
     try {
+        
         const secret = speakeasy.generateSecret({ length: 20 });
         const otpUrl  = secret.otpauth_url+`&issuer=${"Medipappel"}%20${username}`
-        console.log(otpUrl);
-        
         const qrCodeDataURL = await QRCode.toDataURL(otpUrl);
 
         const base64Data = qrCodeDataURL.replace(/^data:image\/png;base64,/, '');
         const buffer = Buffer.from(base64Data, 'base64');
 
-        const filename = `${new Date().toISOString()}_qrcode.png`;
+        const filename = `${new Date().getTime()}qrcode.png`;
         const filePath = path.join(qrFolderPath, filename);
-        fs.writeFileSync(filePath, buffer);
-        return { secret: secret.base32,filePath };
+        await uploadFileToS3(buffer,filename);
+        return { secret: secret.base32,fileName:filename };
     } catch (error) {
         console.error("Error generating or saving QR code:", error);
         return null;
