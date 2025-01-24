@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Totp</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h3>Registerd users:</h3>
+        <ul>
+            <% users.forEach(user => { %>
+                <li><%= user.name %> : <%= user.email %></li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <form action="/register-totp" method="post">
+      <input type="email" name="email" placeholder="Email" value="<%= '' %>">
+      <button type="submit">Register</button>
+    </form>
+
+</body>
+</html>
