@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon --ignore './data.json' index.js",
+    "dev": "nodemon --ignore './data.json' index.js",
+    "start": "node  index.js",
     "seed": "node prisma/seed.js"
   },
   "author": "",
